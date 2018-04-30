@@ -1,4 +1,4 @@
-from blackjackEnv import BlackjackEnv
+from blackjackEnv import BlackjackEnv, policy_evaluation, value_optimization
 import random
 
 
@@ -48,22 +48,34 @@ def policy_runner(strategy, env, render=False):
 
 
 def main():
-    for strategy in [
+    myEnv = BlackjackEnv()
+    all_states = myEnv.get_all_states()
+    print("Finished seraching all states")    
+    '''
+    for policy in [
         # add your policies here
         policy_random,
         policy_with_caution,
-        policy_always_take
+        policy_always_take,
+        value_optimization(BlackjackEnv()),
     ]:
+        if (policy_random != policy):
+            env = BlackjackEnv()
+            values = policy_evaluation(policy, env)
+
+            print("States with value: ", len(values),
+                  "start state value: ", values[env.flatten_state(env.reset())])
+
         reward_sum = 0
         for i in range(10):
             env = BlackjackEnv()
             env.seed(i)
-            reward = policy_runner(strategy, env)
-            print(reward, strategy.__name__)
+            reward = policy_runner(policy, env)
+            print(reward, policy.__name__)
             reward_sum += reward
-        print("Total", reward_sum, strategy.__name__)
+        print("Total", reward_sum, policy.__name__)
         print()
-
+    '''
 
 if __name__ == "__main__":
     # execute only if run as a script
