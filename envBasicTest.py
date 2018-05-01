@@ -41,23 +41,19 @@ def policy_runner(strategy, env, render=False):
         if (render):
             env.render()
         action = strategy(state, env)
+        #print("Action: ",parseAction(action))
         state, new_reward, done, _ = env.step(action)
-        reward += new_reward
-
+        reward += new_reward    
     return reward
 
-
 def main():
-    myEnv = BlackjackEnv()
-    all_states = myEnv.get_all_states()
-    print("Finished seraching all states")    
-    '''
+
     for policy in [
         # add your policies here
         policy_random,
         policy_with_caution,
         policy_always_take,
-        value_optimization(BlackjackEnv()),
+#        value_optimization(BlackjackEnv()),
     ]:
         if (policy_random != policy):
             env = BlackjackEnv()
@@ -75,7 +71,11 @@ def main():
             reward_sum += reward
         print("Total", reward_sum, policy.__name__)
         print()
-    '''
+
+
+def parseAction(key) :
+    choices = {0: 'take_top_card', 1: 'peek_top_card', 2: 'quit_game'}
+    return choices.get(key, 'default')    
 
 if __name__ == "__main__":
     # execute only if run as a script

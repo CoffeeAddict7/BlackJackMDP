@@ -10,7 +10,8 @@ class BlackjackEnvAbs(gym.Env):
     metadata = {'render.modes': ['human']}
 
     #multiplicity=4 , cards =12, handlimit = 10
-    def __init__(self, cards=1, multiplicity=1, hand_limit=5, peek_reward=-1, allow_set_state=True):
+    #multiplicity=4 , cards =4, handlimit = 5
+    def __init__(self, cards=12, multiplicity=4, hand_limit=10, peek_reward=-1, allow_set_state=True):
         self.cards = cards
         self.multiplicity = multiplicity
         self.allow_set_state = allow_set_state
