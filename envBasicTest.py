@@ -1,6 +1,7 @@
 from blackjackEnv import BlackjackEnv, policy_evaluation, value_optimization
 import random
 from operator import itemgetter
+import numpy as np
 
 def policy_with_caution(state, env):
     hand_limit = env.hand_limit
@@ -24,6 +25,28 @@ def policy_with_caution(state, env):
 
     return action
 
+
+def policy_take_until_quit(state, env):
+    hand_limit = env.hand_limit
+    max_card = env.cards
+    valueCardsInHand = state["valueCardsInHand"]
+    if valueCardsInHand + max_card < hand_limit:
+        action = 0
+    else:
+        action = 2
+    return action
+
+def policy_take_YOLO(state, env):
+    hand_limit = env.hand_limit
+    max_card = env.cards
+    valueCardsInHand = state["valueCardsInHand"]
+    max_card = env.cards
+    nextPossibleCard = np.ceil(max_card*np.random.uniform(0, 1, size=1)[0])
+    if valueCardsInHand + nextPossibleCard < hand_limit:
+        action = 0
+    else:
+        action = 2
+    return action
 
 def policy_peek_before_take(state, env):
     hand_limit = env.hand_limit
@@ -61,34 +84,26 @@ def policy_runner(strategy, env, render=False):
     return reward
 
 def main():
-    '''    
-    def takeCards(elem):
-        return elem[2]
-    
-    all_states = BlackjackEnv().get_all_states()
-    sorted_states = sorted(all_states,key = takeCards)
-    for s in sorted_states: print(s)
-    print(max(list(map(lambda i: i[0], all_states))))
-    '''
 
     for policy in [
         # add your policies here
-       # policy_random,
-         policy_with_caution,
+        # policy_random,
+         policy_take_YOLO,
+         policy_take_until_quit,
          policy_peek_before_take,       
-         value_optimization(BlackjackEnv(),3),
-       # policy_always_take,        
+         policy_with_caution,
+         value_optimization(BlackjackEnv(),5),
+        # policy_always_take,        
     ]:
         
         if (policy_random != policy):
             env = BlackjackEnv()
-            values = policy_evaluation(policy, env,10)
+            values = policy_evaluation(policy, env,5)
 
             print("States with value: ", len(values),
                   "start state value: ", values[env.flatten_state(env.reset())])
-            total = 0
-            for k in values: total+=values[k]
-            print("Total value", total)
+            showEvaluationValue(values)
+            
         
         reward_sum = 0
         for i in range(10):
@@ -99,6 +114,11 @@ def main():
             reward_sum += reward
         print("Total", reward_sum, policy.__name__)
         print()
+
+def showEvaluationValue(values):
+    total = 0
+    for k in values: total+=values[k]
+    print("Total value", total)
 
 if __name__ == "__main__":
     # execute only if run as a script

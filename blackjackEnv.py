@@ -161,7 +161,7 @@ def max_action_Q(pa, env, v_opt, state, discount):
 
     if not env._is_end():   
         for a in range(3):
-            a_value_maximizer[a] = sum(map(lambda p_s: state_utility(v_opt, state, p_s, env, discount), env.get_next_state_prob(a)))        
+            a_value_maximizer[a] = sum(map(lambda p_s: state_utility(v_opt, state, p_s, env, discount), env.get_next_state_prob(a)))               
         optimal_act =  max(a_value_maximizer.items(), key=itemgetter(1))[0]
         step_val =  max(a_value_maximizer.items(), key=itemgetter(1))[1]
     env.reset()
