@@ -11,7 +11,7 @@ class BlackjackEnvAbs(gym.Env):
 
     #multiplicity=4 , cards =12, handlimit = 10
     #multiplicity=4 , cards =4, handlimit = 5
-    def __init__(self, cards=12, multiplicity=4, hand_limit=10, peek_reward=-1, allow_set_state=True):
+    def __init__(self, cards=3, multiplicity=4, hand_limit=7, peek_reward=-1, allow_set_state=True):
         self.cards = cards
         self.multiplicity = multiplicity
         self.allow_set_state = allow_set_state

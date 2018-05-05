@@ -112,26 +112,31 @@ class BlackjackEnv(BlackjackEnvAbs):
         self.reset() 
         return all_states
 
-def policy_evaluation(policy, env, discount=1):
-    values = dict(map(lambda s: (s, 0), env.get_all_states()))# dictionary of flat state to state value    
-    for state in values:        
-        action = get_policy_action(env, policy, state)
-        env.set_state(env.unflatten_state(state))
-        if not env._is_end():
-            prob_states = env.get_next_state_prob(action)
-            dp_solve_utility(values, state, prob_states, env, discount) 
-        env.reset()
+def policy_evaluation(policy, env, N=1, discount=1):
+    all_states = env.get_all_states()
+    values = dict(map(lambda s: (s, 0), all_states))# dictionary of flat state to state value    
+    for i in range(N):
+        iter_values = dict(map(lambda s: (s, 0), all_states))
+        for state in values:        
+            action = get_policy_action(env, policy, state)
+            env.set_state(env.unflatten_state(state))
+            if not env._is_end():
+                prob_states = env.get_next_state_prob(action)
+                values[state] = solve_Q(values, iter_values, state, prob_states, env, discount) 
+            env.reset()
     return values
 
 def get_policy_action(env, policy, state):
     return policy(env.unflatten_state(state), env)
 
-def dp_solve_utility(values, prev_state, prob_states, env, discount):
+def solve_Q(values, iter_values, prev_state, prob_states, env, discount):   
+    iter_values[prev_state] = 0    
     for p_s in prob_states:
         new_state = env.flatten_state(p_s[0][0])
         reward = p_s[0][1]
         prob = p_s[1]
-        values[prev_state] += prob*(reward + discount*values[new_state])
+        iter_values[prev_state] += prob*(reward + discount*values[new_state])
+    return iter_values[prev_state]
  
 
 def value_optimization(env, N=1, discount=1):

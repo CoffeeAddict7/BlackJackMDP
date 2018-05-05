@@ -82,7 +82,7 @@ def main():
         
         if (policy_random != policy):
             env = BlackjackEnv()
-            values = policy_evaluation(policy, env)
+            values = policy_evaluation(policy, env,10)
 
             print("States with value: ", len(values),
                   "start state value: ", values[env.flatten_state(env.reset())])
