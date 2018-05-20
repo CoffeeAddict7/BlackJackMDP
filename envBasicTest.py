@@ -89,7 +89,7 @@ def main():
         # add your policies here
         # policy_random,
          policy_take_YOLO,
-         policy_take_until_quit,
+        # policy_take_until_quit,
          policy_peek_before_take,       
          policy_with_caution,
          value_optimization(BlackjackEnv(),5),
